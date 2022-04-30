@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args){
@@ -37,7 +36,7 @@ public class Main {
                 }
             } else {
                 if (p0Card.compareTo(p1Card) < 0) { // Player 1 has greater card
-                    if (p0Card.compareTo(p1Card) != 1) {
+                    if (p0Card.compareTo(p1Card) != -1) {
                         System.out.println("Player 1 wins!");
                         winner = 1;
                     } else { // Notched
@@ -79,10 +78,9 @@ public class Main {
             diff = p0Used.get(p0Used.size() - 1).compareTo(p1Used.get(p1Used.size() - 1));
         }
 
-        int winner = 50000;
         boolean tf;
-        tf = ((diff > 0 || diff == -1) && diff != 1);
-        winner = tf ? 0 : 1;
+        tf = (((diff > 0) && diff != 1) || diff == -1);
+        int winner = tf ? 0 : 1;
 
         if(diff == 1 || diff == -1){
             System.out.println("Notched! Player " + winner + " wins!");
@@ -103,9 +101,9 @@ public class Main {
     public static void playNotchWar(Player[] players){
         System.out.println("Game Start");
         while(players[0].size() != 0 && players[1].size() != 0){
-            playRound(players);
             System.out.println("Player 0 has " + players[0].size() + " cards.");
             System.out.println("Player 1 has " + players[1].size() + " cards.");
+            playRound(players);
         }
         int winner = (players[0].size() == 0) ? 1 : 0;
         System.out.println("Game Over!");
