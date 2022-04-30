@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args){
-        Player[] players = setup();
-        deal(players);
+        Player[] players = setup(); // create array of 2 players
+        deal(players); // deals 26 cards to each player
         playNotchWar(players);
     }
 
-    public static Player[] setup(){
+    public static Player[] setup(){ // Sets up the game by creating an array of 2 players
         return(new Player[]{new Player(), new Player()});
     }
 
