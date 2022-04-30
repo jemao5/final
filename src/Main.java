@@ -1,24 +1,11 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args){
         Player[] players = setup();
         deal(players);
-        System.out.println(players[0].toString());
-        System.out.println(players[1].toString());
-//        while(players[0].size() != 0 && players[1].size() != 0){
-//            playRound(players);
-//            System.out.println(players[0].toString());
-//            System.out.println(players[1].toString());
-//        }
-        for(int i = 0; i < 60; i++){
-            playRound(players);
-//            System.out.println(players[0].toString());
-//            System.out.println(players[1].toString());
-            assert(players[0].size() > 1);
-            assert(players[1].size() > 1);
-        }
-
+        playNotchWar(players);
     }
 
     public static Player[] setup(){
@@ -37,93 +24,91 @@ public class Main {
     public static void playRound(Player[] players){
         Card p0Card = players[0].get();
         Card p1Card = players[1].get();
-        System.out.println(p0Card.toString() + " vs. " + p1Card.toString());
+        int winner = 500;
+        System.out.println("Player 0 has " + p0Card.toString() + ". Player 1 has " + p1Card.toString() + ".");
         if(!(p0Card.equals(p1Card))){
             if(p0Card.compareTo(p1Card) > 0){ // Player 0 has greater card
                 if(p0Card.compareTo(p1Card) != 1){
                     System.out.println("Player 0 wins!");
-                    players[0].put(p0Card);
-                    players[0].put(p1Card);
+                    winner = 0;
                 } else { // Notched
                     System.out.println("Notched! Player 1 wins!");
-                    players[1].put(p0Card);
-                    players[1].put(p1Card);
+                    winner = 1;
                 }
             } else {
                 if (p0Card.compareTo(p1Card) < 0) { // Player 1 has greater card
                     if (p0Card.compareTo(p1Card) != 1) {
                         System.out.println("Player 1 wins!");
-                        players[1].put(p0Card);
-                        players[1].put(p1Card);
+                        winner = 1;
                     } else { // Notched
                         System.out.println("Notched! Player 0 wins!");
-                        players[0].put(p0Card);
-                        players[0].put(p1Card);
+                        winner = 0;
                     }
                 }
             }
         } else {
-            System.out.println(players[0].toString());
-            System.out.println(players[1].toString());
-            System.out.println("War!");
-            war(players);
-            System.out.println(players[0].toString());
-            System.out.println(players[1].toString());
+            if(war(players)){
+                winner = 0;
+            } else {
+                winner = 1;
+            }
         }
+        players[winner].put(p0Card);
+        players[winner].put(p1Card);
+        System.out.println();
     }
 
-    public static int war(Player[] players){
-        int p0Size = Math.min(players[0].size(), 4);
-        int p1Size = Math.min(players[0].size(), 4);
-        Card[] p0Cards = new Card[p0Size];
-        Card[] p1Cards = new Card[p1Size];
-
-        for(Card c : p0Cards){
-            c = players[0].get();
-        }
-        for(Card c : p1Cards){
-            c = players[1].get();
-        }
-
-        int p0Index = p0Size - 1;
-        int p1Index = p1Size - 1;
-
-
-
-        int winner = 0;
-        int counter = 0;
-        while(winner == 0){
-            System.out.println(p0Cards[counter].toString() + " vs. " + p1Cards[counter]);
-            if(counter > 3){
-                winner = war(players);
-            }
-            winner = (p0Cards[counter].compareTo(p1Cards[counter]));
-            if(winner == 0){
-                System.out.println("Tie! Next Card");
-            }
+    public static Boolean war(Player[] players){
+        int diff = 0;
+        int counter = 1;
+        ArrayList<Card> p0Used = new ArrayList<>();
+        ArrayList<Card> p1Used = new ArrayList<>();
+        while(diff == 0){
+            System.out.println("WAR!");
+            System.out.println("Round " + counter);
             counter++;
+            int p0Size = Math.min(players[0].size(), 4);
+            int p1Size = Math.min(players[1].size(), 4);
+            for(int i = 0; i < p0Size; i++){
+                p0Used.add(players[0].get());
+            }
+            for(int i = 0; i < p1Size; i++){
+                p1Used.add(players[1].get());
+            }
+            System.out.println(p0Used.get(p0Used.size() - 1).toString() + " vs. " + p1Used.get(p1Used.size() - 1).toString());
+            diff = p0Used.get(p0Used.size() - 1).compareTo(p1Used.get(p1Used.size() - 1));
         }
-        if((winner > 0 && winner != 1) || winner == -1){
-            System.out.println("Player 0 wins!");
-            players[0].put(p0Cards[0]);
-            players[0].put(p0Cards[1]);
-            players[0].put(p0Cards[2]);
-            players[0].put(p0Cards[3]);
-            players[0].put(p1Cards[0]);
-            players[0].put(p1Cards[1]);
-            players[0].put(p1Cards[2]);
-            players[0].put(p1Cards[3]);
+
+        int winner = 50000;
+        boolean tf;
+        tf = ((diff > 0 || diff == -1) && diff != 1);
+        winner = tf ? 0 : 1;
+
+        if(diff == 1 || diff == -1){
+            System.out.println("Notched! Player " + winner + " wins!");
         } else {
-            System.out.println("Player 1 wins!");
-            players[1].put(p0Cards[0]);
-            players[1].put(p0Cards[1]);
-            players[1].put(p0Cards[2]);
-            players[1].put(p0Cards[3]);
-            players[1].put(p1Cards[0]);
-            players[1].put(p1Cards[1]);
-            players[1].put(p1Cards[2]);
-            players[1].put(p1Cards[3]);
+            System.out.println("Player " + winner + " wins!");
         }
-        return(winner);
+
+        for (Card value : p0Used) {
+            players[winner].put(value);
+        }
+        for (Card card : p1Used) {
+            players[winner].put(card);
+        }
+
+        return(tf);
+    }
+
+    public static void playNotchWar(Player[] players){
+        System.out.println("Game Start");
+        while(players[0].size() != 0 && players[1].size() != 0){
+            playRound(players);
+            System.out.println("Player 0 has " + players[0].size() + " cards.");
+            System.out.println("Player 1 has " + players[1].size() + " cards.");
+        }
+        int winner = (players[0].size() == 0) ? 1 : 0;
+        System.out.println("Game Over!");
+        System.out.println("Player " + winner + " wins the game!");
     }
 }
