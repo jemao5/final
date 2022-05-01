@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class Hand<E> extends LinkedList<E> {
+public class Hand<E> extends LinkedList<E> { // Previously was Thing1. Renamed hand because it contains the cards a player has.
     public Hand() {}
 
     public void put(E o) {

@@ -25,12 +25,12 @@ public class Card implements Comparable<Card> {
 
     public String getSymbol() { return mySymbol; }
 
-    public int compareTo(Card card) {
+    public int compareTo(Card card) { // Returns the difference in ranks
         // YOU WRITE THIS
         return(myRank - card.getRank());
     }
 
-    public boolean equals(Card card) {
+    public boolean equals(Card card) { // Checks for card rank equality
         // YOU WRITE THIS
         return(myRank == card.getRank());
     }
