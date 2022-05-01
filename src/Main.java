@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args){
@@ -46,20 +47,26 @@ public class Main {
                 }
             }
         } else { // Tie -> war
-            if(war(players)){
+            System.out.println(players[0].toString());
+            System.out.println(players[1].toString());
+            if(war(players, p0Card, p1Card)){
                 winner = 0;
             } else {
                 winner = 1;
             }
+            System.out.println(players[0].toString());
+            System.out.println(players[1].toString());
         }
         players[winner].put(p0Card); // places cards at bottom of winner deck
         players[winner].put(p1Card);
         System.out.println(); // prints new line
     }
 
-    public static Boolean war(Player[] players){ // returns boolean to easily tell who won. {True} -> P0, {False} -> P1
+    public static Boolean war(Player[] players, Card p0Removed, Card p1Removed){ // returns boolean to easily tell who won. {True} -> P0, {False} -> P1
         int diff = 0; // initializes difference between cards to 0
         int counter = 1; // counter for number of loops. Each loop constitutes a war.
+        int p0InitialSize = players[0].size();
+        int p1InitialSize = players[1].size();
         ArrayList<Card> p0Used = new ArrayList<>(); // stores the cards removed from player 0's hand
         ArrayList<Card> p1Used = new ArrayList<>(); // stores the cards removed from player 1's hand
         while(diff == 0){ // while the cards are at a tie
@@ -68,11 +75,19 @@ public class Main {
             counter++;
             int p0Size = Math.min(players[0].size(), 4); // takes the minimum between the number of cards in player 0's hand and 4.
             int p1Size = Math.min(players[1].size(), 4); // takes the minimum between the number of cards in player 1's hand and 4.
-            for(int i = 0; i < p0Size; i++){ // Using the minimum, remove that many cards from the players' hands and store them in the respective arraylists.
-                p0Used.add(players[0].get());
+            if(p0InitialSize == 0) { // Handles edge case where there is a war when a player has only 1 card.
+                p0Used.add(p0Removed);
+            } else {
+                for (int i = 0; i < p0Size; i++) { // Using the minimum, remove that many cards from the players' hands and store them in the respective arraylists.
+                    p0Used.add(players[0].get());
+                }
             }
-            for(int i = 0; i < p1Size; i++){
-                p1Used.add(players[1].get());
+            if(p1InitialSize == 0) { // Handles edge case where there is a war when a player has only 1 card.
+                p1Used.add(p1Removed);
+            } else {
+                for (int i = 0; i < p1Size; i++) {
+                    p1Used.add(players[1].get());
+                }
             }
             System.out.println(p0Used.get(p0Used.size() - 1).toString() + " vs. " + p1Used.get(p1Used.size() - 1).toString());
             diff = p0Used.get(p0Used.size() - 1).compareTo(p1Used.get(p1Used.size() - 1)); // compares the last card in each array.
@@ -87,11 +102,15 @@ public class Main {
             System.out.println("Player " + winner + " wins!");
         }
 
-        for (Card value : p0Used) { // Moves the cards from the two used card arrays to the winner's hand.
-            players[winner].put(value);
+        if(p0InitialSize != 0){ // Handles edge case where there is a war when a player has only 1 card.
+            for (Card card : p0Used) { // Moves the cards from the two used card arrays to the winner's hand.
+                players[winner].put(card);
+            }
         }
-        for (Card card : p1Used) {
-            players[winner].put(card);
+        if(p1InitialSize != 0) { // Handles edge case where there is a war when a player has only 1 card.
+            for (Card card : p1Used) {
+                players[winner].put(card);
+            }
         }
 
         return(tf); // returns the Boolean value for the winner.
