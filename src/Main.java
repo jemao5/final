@@ -47,15 +47,11 @@ public class Main {
                 }
             }
         } else { // Tie -> war
-            System.out.println(players[0].toString());
-            System.out.println(players[1].toString());
             if(war(players, p0Card, p1Card)){
                 winner = 0;
             } else {
                 winner = 1;
             }
-            System.out.println(players[0].toString());
-            System.out.println(players[1].toString());
         }
         players[winner].put(p0Card); // places cards at bottom of winner deck
         players[winner].put(p1Card);
@@ -65,8 +61,8 @@ public class Main {
     public static Boolean war(Player[] players, Card p0Removed, Card p1Removed){ // returns boolean to easily tell who won. {True} -> P0, {False} -> P1
         int diff = 0; // initializes difference between cards to 0
         int counter = 1; // counter for number of loops. Each loop constitutes a war.
-        int p0InitialSize = players[0].size();
-        int p1InitialSize = players[1].size();
+        int p0InitialSize = players[0].size(); // Variables to check for edge case
+        int p1InitialSize = players[1].size(); // Variables to check for edge case
         ArrayList<Card> p0Used = new ArrayList<>(); // stores the cards removed from player 0's hand
         ArrayList<Card> p1Used = new ArrayList<>(); // stores the cards removed from player 1's hand
         while(diff == 0){ // while the cards are at a tie
